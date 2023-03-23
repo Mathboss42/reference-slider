@@ -10,6 +10,7 @@ const props = defineProps({
 	onChangeInput: Function,
 	onToggleShuffle: Function,
 	shuffle: Boolean,
+	time: Number,
 })
 </script>
 
@@ -44,14 +45,14 @@ const props = defineProps({
 			</div>
 			<div class="row justify-content-center my-5">
 				<div class="col-auto">
-					<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="display-time" :onchange="onChangeTime">
-						<option value="0.5" selected>30s</option>
-						<option value="1">1min</option>
-						<option value="2">2min</option>
-						<option value="3">3min</option>
-						<option value="4">4min</option>
-						<option value="5">5min</option>
-						<option value="10">10min</option>
+					<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="display-time" :onchange="onChangeTime" :value="time">
+						<option value="30">30s</option>
+						<option value="60">1min</option>
+						<option value="120">2min</option>
+						<option value="180">3min</option>
+						<option value="240">4min</option>
+						<option value="300">5min</option>
+						<option value="600">10min</option>
 					</select>
 				</div>
 				<div class="col-auto align-self-center fs-4" id="time-label">

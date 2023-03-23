@@ -5,9 +5,10 @@ import { ref } from 'vue';
 
 
 const isSessionStarted = ref(false);
-const time = ref(0.5);
+const time = ref(30);
 const URL = ref(null);
 const shuffle = ref(false);
+const componentKey = ref(0);
 
 
 function onClickStart(e) {
@@ -48,6 +49,10 @@ function quit() {
 function onChangeInput(e) {
 	URL.value = e.target.value;
 }
+
+function restart() {
+	componentKey.value++;
+}
 </script>
 
 <template>
@@ -60,10 +65,15 @@ function onChangeInput(e) {
 		:on-change-input="onChangeInput"
 		:on-toggle-shuffle="toggleShuffle"
 		:shuffle="shuffle"
+		:time="time"
 	/>
 	<SessionScreen 
 		v-else 
 		:on-quit="quit"
+		:shuffle="shuffle"
+		:time="time"
+		:restart="restart"
+		:key="componentKey"
 	/>
 </template>
 
