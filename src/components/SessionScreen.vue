@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue';
+import images from '../assets/images';
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({

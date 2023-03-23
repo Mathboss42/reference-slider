@@ -1,12 +1,14 @@
 <script setup>
 import { defineProps } from 'vue';
 
-
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
 	onClickStart: Function,
-	onChangeTime: Function
-}) 
+	onChangeTime: Function,
+	url: String,
+	onClearUrlInput: Function,
+	onChangeInput: Function,
+})
 </script>
 
 <template>
@@ -16,21 +18,27 @@ const props = defineProps({
 				<h1 class="h1 text-white">Reference Slider</h1>
 			</div>
 			<div class="row justify-content-center my-5">
-				<div class="col-8">
-					<div class="form-floating">
-						<input type="email" class="form-control" id="floatingInput" placeholder="Pinterest Board URL">
-						<label for="floatingInput" class="text-secondary">Pinterest Board URL</label>
+				<form @submit.prevent="onClickStart">
+					<div class="row justify-content-center my-5">
+						<div class="col-8">
+							<div class="input-group">
+								<div class="form-floating">
+									<input type="text" class="form-control" name="url" id="floatingInput" placeholder="Pinterest Board URL" :value="url" :onchange="onChangeInput">
+									<label for="floatingInput" class="text-secondary">Pinterest Board URL</label>
+								</div>
+								<button class="btn btn-outline-secondary bg-white fs-3" type="button" id="button-addon1" :onclick="onClearUrlInput">X</button>
+							</div>
+						</div>
+						<div class="col-auto">
+							<button
+								class="btn btn-primary btn-lg fs-4"
+								id="start-button"
+							>
+								Start
+							</button>
+						</div>
 					</div>
-				</div>
-				<div class="col-auto">
-					<button
-						@click="onClickStart"
-						class="btn btn-primary btn-lg fs-4"
-						id="start-button"
-					>
-						Start
-					</button>
-				</div>
+				</form>
 			</div>
 			<div class="row justify-content-center my-5">
 				<div class="col-auto">
@@ -76,5 +84,10 @@ main {
 
 #start-button {
 	height: calc(3.5rem + 2px);
+}
+
+#button-addon1:hover {
+	color: black;
+	border-color: black;
 }
 </style>
