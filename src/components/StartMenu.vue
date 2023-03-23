@@ -1,20 +1,17 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineProps } from 'vue';
 
-const time = ref(60);
-const router = useRouter()
 
-function startSession() {
-	console.log('start session');
-	router.push({ name: 'session', params: { time: time.value}});
-}
-
+// eslint-disable-next-line no-unused-vars
+const props = defineProps({
+	onClickStart: Function,
+	onChangeTime: Function
+}) 
 </script>
 
 <template>
 	<main>
-		<div class="container">
+		<div class="start-menu container">
 			<div class="d-flex justify-content-center">
 				<h1 class="h1 text-white">Reference Slider</h1>
 			</div>
@@ -27,7 +24,7 @@ function startSession() {
 				</div>
 				<div class="col-auto">
 					<button
-						@click="startSession"
+						@click="onClickStart"
 						class="btn btn-primary btn-lg fs-4"
 						id="start-button"
 					>
@@ -37,7 +34,7 @@ function startSession() {
 			</div>
 			<div class="row justify-content-center my-5">
 				<div class="col-auto">
-					<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="display-time">
+					<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="display-time" :onchange="onChangeTime">
 						<option value="0.5" selected>30s</option>
 						<option value="1">1min</option>
 						<option value="2">2min</option>
