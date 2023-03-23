@@ -1,1 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+
+html, body {
+    height: 100vh;
+    background-color: #373f47;
+}
+
+.form-select-lg {
+    margin-bottom: 0 !important;
+}

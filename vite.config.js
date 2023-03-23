@@ -12,7 +12,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@Views': '/src/views',
       '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
     }
+  },
+  server: {
+    hot: true
   }
 })
