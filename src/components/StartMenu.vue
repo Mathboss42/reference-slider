@@ -8,6 +8,8 @@ const props = defineProps({
 	url: String,
 	onClearUrlInput: Function,
 	onChangeInput: Function,
+	onToggleShuffle: Function,
+	shuffle: Boolean,
 })
 </script>
 
@@ -58,7 +60,7 @@ const props = defineProps({
 			</div>
 			<div class="row justify-content-center my-5">
 				<div class="form-check form-switch justify-content-center d-flex align-items-center">
-					<input class="form-check-input big-checkbox me-2" type="checkbox" id="flexSwitchCheckDefault">
+					<input class="form-check-input big-checkbox me-2" type="checkbox" id="flexSwitchCheckDefault" :onchange="onToggleShuffle" :checked="shuffle">
 					<label class="form-check-label fs-4 text-white" for="flexSwitchCheckDefault">Shuffle Images</label>
 				</div>
 			</div>

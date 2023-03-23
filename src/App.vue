@@ -7,6 +7,7 @@ import { ref } from 'vue';
 const isSessionStarted = ref(false);
 const time = ref(0.5);
 const URL = ref(null);
+const shuffle = ref(false);
 
 
 function onClickStart(e) {
@@ -28,15 +29,16 @@ function onClickStart(e) {
 	}
 }
 
+function toggleShuffle() {
+	shuffle.value = !shuffle.value;
+}
+
 function clearUrlInput() {
-	console.log('asd')
 	URL.value = '';
 }
 
 function updateTime(e) {
-	console.log(time.value)
 	time.value = Number(e.target.value)
-	console.log(time.value)
 }
 
 function quit() {
@@ -56,6 +58,8 @@ function onChangeInput(e) {
 		:url="URL"
 		:on-clear-url-input="clearUrlInput"
 		:on-change-input="onChangeInput"
+		:on-toggle-shuffle="toggleShuffle"
+		:shuffle="shuffle"
 	/>
 	<SessionScreen 
 		v-else 
