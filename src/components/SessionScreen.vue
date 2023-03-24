@@ -1,5 +1,6 @@
 <script setup>
-import { defineProps, onMounted, ref, computed, onUnmounted } from 'vue';
+import { defineProps, onMounted, ref, computed, watchEffect } from 'vue';
+import { useTimer } from 'vue-timer-hook';
 import images from '../assets/images';
 
 // eslint-disable-next-line no-unused-vars
@@ -11,22 +12,21 @@ const props = defineProps({
 })
 
 const totalTime = ref(props.time);
-const minutes = computed(() => Math.floor(totalTime.value / 60));
-const seconds = computed(() => totalTime.value - minutes.value * 60);
-const formattedTime = computed(() => `${minutes.value < 10 ? '0' + minutes.value : minutes.value}:
-						${seconds.value < 10 ? '0' + seconds.value : seconds.value}`);
+const formattedTime = computed(() => `${timer.minutes.value < 10 ? '0' + timer.minutes.value : timer.minutes.value}:${timer.seconds.value < 10 ? '0' + timer.seconds.value : timer.seconds.value}`);	
+const newTime = new Date();
+newTime.setSeconds(newTime.getSeconds() + totalTime.value);
+const timer = useTimer(newTime);
 const imgs = computed(() => {
 	if (props.shuffle) {
 		return shuffle(images);
 	} else {
 		return images;
 	}
-})
+});
 
-let index = 0;
+let index = ref(0);
 let isActive = ref(true);
 let isPaused = ref(false);
-let interval;
 
 function shuffle(array) {
   let currentIndex = array.length,  randomIndex;
@@ -45,77 +45,74 @@ function shuffle(array) {
 function onClickPrevious() {
 	if (isActive.value) {
 		displayPreviousImage()
-		resetInterval();
 	} else {
 		isActive.value = true;
-		index = imgs.value.length;
+		index.value = imgs.value.length;
 		displayPreviousImage();
-		resetInterval();
 	}
 }
 
 function onClickNext() {
 	displayNextImage();
-	resetInterval();
 }
 
 function displayPreviousImage() {
-	if (index < 1) {
+	if (isPaused.value) return;
+	if (index.value < 1) {
 		alert('This is the first image.')
 		return;
 	}
-	totalTime.value = props.time;
-	index--;
+	restartTimer();
+	console.log(timer.isRunning.value, timer.seconds.value);
+	index.value--;
 }
 
 function displayNextImage() {
-	if (index + 1 > imgs.value.length - 1) {
+	if (isPaused.value) return;
+	if (index.value + 1 > imgs.value.length - 1) {
 		isActive.value = false;
+		timer.restart(0);
 		return;
 	}
-	totalTime.value = props.time;
-	index++;
-}
-
-function resetInterval() {
-	clearInterval(interval);
-	if (isActive.value) {
-		addInterval();
-	} else {
-		totalTime.value = 0;
-	}
+	restartTimer();
+	console.log(timer.isRunning.value, timer.seconds.value);
+	index.value++;
 }
 
 function playPause() {
 	if (isActive.value) {
 		if (!isPaused.value) {
 			isPaused.value = !isPaused.value;
-			clearInterval(interval);
+			timer.pause();
+			console.log(timer.isRunning.value)
 		} else {
 			isPaused.value = !isPaused.value;
-			resetInterval();
+			timer.resume();
+			console.log(timer.isRunning.value)
 		}
 	} else {
 		return;
 	}
 }
 
-function addInterval() {
-	interval = setInterval(() => {
-		totalTime.value--;
-		if (totalTime.value < 0) {
-			displayNextImage()
-		}
-	}, 1000);
+function restartTimer() {
+	const asd = new Date();
+	asd.setSeconds(asd.getSeconds() + totalTime.value);
+	timer.restart(asd);
 }
 
 onMounted(() => {
-	addInterval();
+	console.log(totalTime.value);
+	console.log(timer.isRunning.value);
+	
+	watchEffect(async () => {
+		if(timer.isExpired.value) {
+			console.warn('IsExpired');
+			displayNextImage();
+		}
+	});
 });
 
-onUnmounted(() => {
-	clearInterval(interval);
-});
 </script>
 
 <template>
