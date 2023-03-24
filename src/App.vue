@@ -1,13 +1,10 @@
 <script setup>
 import StartMenu from './components/StartMenu.vue';
 import SessionScreen from './components/SessionScreen.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import defaultSettings from './settings';
 
-
-const isSessionStarted = ref(false);
-const time = ref(30);
-const URL = ref(null);
-const shuffle = ref(false);
+const settings = ref(initSettings());
 const componentKey = ref(0);
 
 
@@ -21,57 +18,82 @@ function onClickStart(e) {
 	e.target.reset();
 
 	if (newURL) {
-		URL.value = newURL;
-		isSessionStarted.value = true;
-	} else if (URL.value) {
-		isSessionStarted.value = true;
+		settings.value.url = newURL;
+		settings.value.isSessionStarted = true;
+	} else if (settings.value.url) {
+		settings.value.isSessionStarted = true;
 	} else {
 		alert('Please specify a URL to get images from.');
 	}
 }
 
 function toggleShuffle() {
-	shuffle.value = !shuffle.value;
+	settings.value.shuffle = !settings.value.shuffle;
 }
 
 function clearUrlInput() {
-	URL.value = '';
+	settings.value.url = '';
 }
 
 function updateTime(e) {
-	time.value = Number(e.target.value)
+	settings.value.time = Number(e.target.value)
 }
 
 function quit() {
-	isSessionStarted.value = false;
+	settings.value.isSessionStarted = false;
 }
 
 function onChangeInput(e) {
-	URL.value = e.target.value;
+	settings.value.url = e.target.value;
 }
 
 function restart() {
 	componentKey.value++;
 }
+
+function populateLocalStorage(settings) {
+	for (let key in settings) {
+		localStorage.setItem(key, JSON.stringify(settings[key]));
+	}
+}
+
+function initSettings(settings = defaultSettings) {
+	if (!localStorage.length > 0) {
+		console.log('localstorage empty')
+		populateLocalStorage(settings);
+		return defaultSettings;
+	} else {	
+		let newSettings = defaultSettings;
+		for (let key in settings) {
+			newSettings[key] = JSON.parse(localStorage.getItem(key));
+		}
+		return newSettings;
+	}
+}
+
+watch(settings.value, () => {
+	populateLocalStorage(settings.value);
+});
+
 </script>
 
 <template>
 	<StartMenu 
-		v-if="!isSessionStarted" 
+		v-if="!settings.isSessionStarted" 
 		:on-click-start="onClickStart" 
 		:on-change-time="updateTime"
-		:url="URL"
+		:url="settings.url"
 		:on-clear-url-input="clearUrlInput"
 		:on-change-input="onChangeInput"
 		:on-toggle-shuffle="toggleShuffle"
-		:shuffle="shuffle"
-		:time="time"
+		:shuffle="settings.shuffle"
+		:time="settings.time"
 	/>
 	<SessionScreen 
 		v-else 
 		:on-quit="quit"
-		:shuffle="shuffle"
-		:time="time"
+		:shuffle="settings.shuffle"
+		:time="settings.time"
 		:restart="restart"
 		:key="componentKey"
 	/>
