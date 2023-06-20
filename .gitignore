@@ -26,3 +26,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# Additions
+docker-compose.yml
+connect_ref.sh
