@@ -30,3 +30,4 @@ coverage
 # Additions
 docker-compose.yml
 connect_ref.sh
+start_container_and_server.sh
